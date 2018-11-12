@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Pyodide: The scientific stack in WebAssembly - iodide</title>
+<link rel="stylesheet" type="text/css" href="https://iodide.io/dist/iodide.pyodide-20180623.css">
+</head>
+<body>
+<script id="jsmd" type="text/jsmd">
+%% meta
+{
+  "title": "Pyodide: The scientific stack in WebAssembly",
+  "languages": {
+    "js": {
+      "pluginType": "language",
+      "languageId": "js",
+      "displayName": "Javascript",
+      "codeMirrorMode": "javascript",
+      "module": "window",
+      "evaluator": "eval",
+      "keybinding": "j",
+      "url": ""
+    },
+    "py": {
+      "languageId": "py",
+      "displayName": "python",
+      "codeMirrorMode": "python",
+      "keybinding": "p",
+      "url": "https://iodide.io/pyodide-demo/pyodide.js",
+      "module": "pyodide",
+      "evaluator": "runPython",
+      "pluginType": "language"
+    }
+  },
+  "lastExport": "2018-05-27T14:00:54.686Z"
+}
+
+%% md
+# Pyodide 🐍
+
+Data club presentation 2018-05-29
+
+%% plugin
+{
+  "languageId": "py",
+  "displayName": "python",
+  "codeMirrorMode": "python",
+  "keybinding": "p",
+  "url": "https://iodide.io/pyodide-demo/pyodide.js",
+  "module": "pyodide",
+  "evaluator": "runPython",
+  "pluginType": "language"
+}
+
+%% code {"language":"py"}
+# python
+import sys
+sys.version
+
+%% code {"language":"py"}
+import antigravity
+
+%% code {"language":"py"}
+[0, 1, 32.0, 'foo', {'a': 10, 'b': '20'}]
+
+%% md
+## Using Javascript from Python
+
+%% code {"language":"py"}
+from js import document
+document.body.style.backgroundColor = '#ff0000'
+
+%% code {"language":"py"}
+document.body.style.backgroundColor = '#ffffff'
+
+%% code {"language":"py"}
+from js import iodide
+button = iodide.output.element('button')
+button.textContent = "Click me!"
+
+def onclick(evt):
+  print("click")
+  if document.body.style.backgroundColor == 'rgb(255, 255, 255)':
+    document.body.style.backgroundColor = '#ff0000'
+  else:
+    document.body.style.backgroundColor = '#ffffff'
+
+button.addEventListener('click', onclick)
+
+%% md
+## Using Python from Javascript
+
+%% code {"language":"py"}
+# python
+class Foo:
+  def __init__(self, val):
+    self.val = val
+foo = Foo(42)
+foo
+
+%% js
+// javascript
+var foo = pyodide.pyimport("foo")
+foo.val
+
+%% md
+## The Scientific libraries
+
+Currently: numpy, pandas, matplotlib
+
+%% js
+pyodide.loadPackage('numpy')
+
+%% code {"language":"py"}
+import numpy as np
+x = np.linspace(0, 2.0 * np.pi, 100)
+y = np.sin(x)
+y
+
+%% js
+pyodide.loadPackage('matplotlib')
+
+%% code {"language":"py"}
+from matplotlib import pyplot as plt
+plt.figure()
+plt.plot(x, y)
+plt.show()
+
+%% resource
+https://cdn.plot.ly/plotly-latest.min.js
+
+%% code {"language":"py"}
+from js import Plotly
+from js import iodide
+
+Plotly.plot(
+    iodide.output.element('div'),
+    [{ 'y': y, 'x': x }],
+)
+
+%% md
+## Other demos
+
+- [benchmarks](http://droettboom.com/images/benchmark_improvement.svg)
+- [matplotlib animation](https://iodide.io/pyodide-demo/matplotlib-sideload.html?sideload=https://matplotlib.org/examples/animation/rain.py)
+- [Hipster Band Finder example](https://iodide.io/iodide-examples/hipster-band-finder.html) -- Using Pandas and Plotly together
+- Running Pyodide inside of JupyterLab using [Jyve](https://github.com/deathbeds/jyve/pull/12)
+</script>
+<div id='page'></div>
+<script src='https://iodide.io/dist/iodide.pyodide-20180623.js'></script>
+</body>
+</html>
