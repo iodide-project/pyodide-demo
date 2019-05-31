@@ -1,2 +1,0 @@
-#!/bin/sh
-sed -i -e 's#https://iodide.io/pyodide-demo#'"$URL"'#g' pyodide.js *.html
